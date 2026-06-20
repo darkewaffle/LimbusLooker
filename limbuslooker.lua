@@ -6,6 +6,8 @@ _addon.command = "LL"
 WINDOWER_PACKETS = require "packets"
 WINDOWER_RESOURCES = require "resources"
 WINDOWER_TEXTS = require "texts"
+require "bit"
+require "pack"
 
 require "libraries/get_character"
 require "libraries/int_to_binary"
