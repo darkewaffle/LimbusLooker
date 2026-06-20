@@ -14,6 +14,8 @@ local LocatedITG = 0
 local LocatedITGOriginalName = ""
 local LocatedQuestionMark = 0
 
+local ShowScans = false
+
 function QueueForCheck(NPCID, NPCIndex)
 	if not CheckSent[NPCID] and not CheckComplete[NPCID] then
 		table.insert(CheckQueue, {["ID"] = NPCID, ["Index"] = NPCIndex})
@@ -35,6 +37,10 @@ function RunCheck()
 	local NextBatch = {}
 	local NextBatchSize = 0
 	local Iterator = 0
+
+	if ShowScans then
+		windower.add_to_chat(1, "- - Batch Starting - -")
+	end
 
 	-- Search CheckQueue for IDs that have not been checked. Place them in NextBatch.
 	-- End when NextBatch has CheckBatchSize number of entries or the Iterator has exhausted all entries in CheckQueue.
@@ -94,6 +100,10 @@ function CheckTarget(TargetID, TargetIndex)
 	CheckPacket["Target"] = TargetID
 	CheckPacket["Target Index"] = TargetIndex
 	WINDOWER_PACKETS.inject(CheckPacket)
+
+	if ShowScans then
+		windower.add_to_chat(1, "/check sent for Index=" .. TargetIndex)
+	end
 
 	CheckSent[TargetID] = {["Index"] = TargetIndex, ["TimeSent"] = os.clock()}
 end
@@ -192,4 +202,8 @@ end
 
 function DelayCheckStartForFloorChange()
 	DelayCheckStart(FloorChangeCheckStartDelay)
+end
+
+function ToggleShowScans()
+	ShowScans = not ShowScans
 end

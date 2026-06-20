@@ -115,6 +115,10 @@ end
 function OnCommand(...)
 	local CommandParameters = {...}
 
+	if CommandParameters[1] == "show" then
+		ToggleShowScans()
+	end
+
 	if CommandParameters[1] == "start" then
 		InLimbus = true
 		HandleTransientEvents("start")
