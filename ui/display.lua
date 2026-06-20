@@ -64,7 +64,11 @@ function SetDisplayITG()
 end
 
 function SetDisplayQuestionMark()
-	SetDisplayForMob(GetLocatedQuestionMark(), "???")
+	if GetLocatedQuestionMarkHidden() then
+		SetDisplayForMob(GetLocatedQuestionMarkID(), "??? (Inactive)")
+	else
+		SetDisplayForMob(GetLocatedQuestionMarkID(), "??? (Active)")
+	end
 end
 
 function SetDisplayForMob(TargetID, DisplayLabel)

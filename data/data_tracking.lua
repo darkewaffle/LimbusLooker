@@ -12,7 +12,7 @@ local CheckSentStaleSeconds = 5
 
 local LocatedITG = 0
 local LocatedITGOriginalName = ""
-local LocatedQuestionMark = 0
+local LocatedQuestionMark = {["ID"] = 0, ["Hidden"] = false}
 
 local ShowScans = false
 
@@ -129,8 +129,8 @@ function ResetIDCheckState(ResetID)
 	if ResetID == LocatedITG then
 		ResetTrackedData()
 		return
-	elseif ResetID == LocatedQuestionMark then
-		ResetQuestionMark()
+	elseif ResetID == GetLocatedQuestionMarkID() then
+		ResetLocatedQuestionMark()
 		return
 	end
 
@@ -151,7 +151,7 @@ function ResetTrackedData()
 	CheckInProgress = false
 	LocatedITG = 0
 	LocatedITGOriginalName = ""
-	LocatedQuestionMark = 0
+	ResetLocatedQuestionMark()
 
 	if type(ScheduledCheckCoroutine) == "thread" then
 		coroutine.close(ScheduledCheckCoroutine)
@@ -178,22 +178,30 @@ function GetLocatedITGOriginalName()
 	return LocatedITGOriginalName
 end
 
-function SetLocatedQuestionMark(TargetID)
-	LocatedQuestionMark = TargetID
+function SetLocatedQuestionMark(TargetID, Hidden)
+	LocatedQuestionMark = {["ID"]=TargetID, ["Hidden"] = Hidden}
 	SetDisplayQuestionMark()
 	PlayNotification()
 end
 
-function GetLocatedQuestionMark()
-	if LocatedQuestionMark == 0 then
+function GetLocatedQuestionMarkID()
+	if LocatedQuestionMark["ID"] == 0 then
 		return nil
 	else
-		return LocatedQuestionMark
+		return LocatedQuestionMark["ID"]
 	end
 end
 
-function ResetQuestionMark()
-	LocatedQuestionMark = 0
+function GetLocatedQuestionMarkHidden()
+	if LocatedQuestionMark["Hidden"] == true then
+		return true
+	else
+		return false
+	end
+end
+
+function ResetLocatedQuestionMark()
+	LocatedQuestionMark = {["ID"] = 0, ["Hidden"] = false}
 end
 
 function DelayCheckStart(DelayAmount)

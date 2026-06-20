@@ -98,7 +98,7 @@ function OnRender()
 		LastRenderUpdate = os.clock()
 		if ITGID then
 			SetDisplayITG()
-		elseif GetLocatedQuestionMark() then
+		elseif GetLocatedQuestionMarkID() then
 			SetDisplayQuestionMark()
 		else
 			HideDisplay()
