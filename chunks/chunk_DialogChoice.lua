@@ -6,7 +6,7 @@ function ParseDialogChoice(id, original, modified, injected, blocked)
 	local DialogMob = windower.ffxi.get_mob_by_id(DialogNPCID)
 
 	if DialogMob then
-		if DialogMob.name == "Matter Diffusion Module" and DialogOption == 100 then
+		if (DialogMob.name == "Matter Diffusion Module" or DialogMob.name == "Swirling Vortex") and DialogOption == 100 then
 			DelayCheckStartForFloorChange()
 		end
 	end
