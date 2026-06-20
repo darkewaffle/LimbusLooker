@@ -36,7 +36,7 @@ function OnLoad()
 	table.insert(RegisteredEventIDs, windower.register_event('zone change', OnZone))
 	table.insert(RegisteredEventIDs, windower.register_event('unload', OnUnload))
 	table.insert(RegisteredEventIDs, windower.register_event('addon command', OnCommand))
-	CreateDisplay(true)
+	CreateDisplay(false)
 end
 
 function OnZone(new_id, old_id)
