@@ -10,7 +10,6 @@ require "bit"
 require "pack"
 
 require "libraries/get_character"
-require "libraries/int_to_binary"
 require "libraries/play_notification"
 require "libraries/rename_npc"
 require "libraries/table_move"
