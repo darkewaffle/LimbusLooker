@@ -41,28 +41,22 @@ function OnLoad()
 end
 
 function OnZone(new_id, old_id)
-	ResetTrackedData()
-	HideDisplay()
-
 	if WINDOWER_RESOURCES.zones[new_id].en == "Apollyon" or WINDOWER_RESOURCES.zones[new_id].en == "Temenos" then
 		InLimbus = true
 	else
 		InLimbus = false
 	end
 
-	-- If player is not in Limbus then unregister events that should not be active outside of Limbus.
-	if not InLimbus then
-		HandleTransientEvents("stop")
-	-- If player is in Limbus then register events that should be active while in Limbus.
-	else
+	if InLimbus then
 		HandleTransientEvents("start")
 	end
 end
 
 function OnChunkIn(id, original, modified, injected, blocked)
+	
 	-- NPC status update
 	if id == 0x00E then
-		ParseNPCUpdate(id, original, modified, injected, blocked)
+		return ParseNPCUpdate(id, original, modified, injected, blocked)
 
 	-- Action message
 	elseif id == 0x029 then
@@ -74,8 +68,14 @@ function OnChunkIn(id, original, modified, injected, blocked)
 
 	-- Repositioning (player changed floor in Limbus)
 	elseif id == 0x065 then
-		ResetTrackedData()
 		HideDisplay()
+		ResetTrackedData()
+
+	-- Zone change beginning
+	elseif id == 0x00B then
+		HideDisplay()
+		ResetTrackedData()
+		HandleTransientEvents("stop")
 	end
 end
 
