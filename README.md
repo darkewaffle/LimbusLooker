@@ -22,9 +22,7 @@ Lastly all packet operations are only active in Limbus zones unless you input th
 | --- | --- |
 | ll start | Manually starts the scanning process. This is only necessary if you have manually stopped the scan or if you have reloaded LimbusLooker while inside of Limbus. |
 | ll stop | Manually stops the scanning process. |
-
-## Outstanding Bugs
-Currently even if the ??? despawns and is not visible it actually still exists in the same spot. You simply cannot see nor interact with it. However I haven't yet determined how to tell the difference between a visible ??? and an invisible ??? from the packets. So for the time being even if the ??? has despawned LimbusLooker will still point you to it whenever it's nearby.
+| ll show | Toggles the display of chat messages to indicate when a /check batch is started and when the commands are sent. |
 
 - - - - -
 
