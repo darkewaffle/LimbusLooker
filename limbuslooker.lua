@@ -56,7 +56,7 @@ function OnChunkIn(id, original, modified, injected, blocked)
 	
 	-- NPC status update
 	if id == 0x00E then
-		return ParseNPCUpdate(id, original, modified, injected, blocked)
+		ParseNPCUpdate(id, original, modified, injected, blocked)
 
 	-- Action message
 	elseif id == 0x029 then
