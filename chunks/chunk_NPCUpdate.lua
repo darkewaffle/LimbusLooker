@@ -1,3 +1,18 @@
+local IgnoreNames =
+{
+	["Apollyon Elvaan Shade"] = true,
+	["Apollyon Galka Shade"] = true,
+	["Apollyon Hume Shade"] = true,
+	["Apollyon Mithra Shade"] = true,
+	["Apollyon Tarutaru Shade"] = true,
+
+	["Temenos Elvaan Echo"] = true,
+	["Temenos Galka Echo"] = true,
+	["Temenos Hume Echo"] = true,
+	["Temenos Mithra Echo"] = true,
+	["Temenos Tarutaru Echo"] = true
+}
+
 function ParseNPCUpdate(id, original, modified, injected, blocked)
 	local NPCUpdatePacket = WINDOWER_PACKETS.parse('incoming', original)
 
@@ -33,7 +48,9 @@ function ParseNPCUpdate(id, original, modified, injected, blocked)
 			local MobSpawnType = NPCMob.spawn_type
 
 			if MobSpawnType == 16 and (string.sub(MobName, 1, 8) == "Apollyon" or string.sub(MobName, 1, 7) == "Temenos") then
-				QueueForCheck(NPCID, NPCIndex)
+				if not IgnoreNames[MobName] then
+					QueueForCheck(NPCID, NPCIndex)
+				end
 			end
 		end
 	end
