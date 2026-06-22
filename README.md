@@ -24,6 +24,23 @@ Lastly all packet operations are only active in Limbus zones unless you input th
 | ll stop | Manually stops the scanning process. |
 | ll show | Toggles the display of chat messages to indicate when a /check batch is started and when the commands are sent. |
 
+
+## Note for Battlemod Users
+LimbusLooker will block incoming /check results while in Limbus so that they do not spam your chat log. However if you use the BattleMod addon you may still receive these messages. In order to change this you will have to alter BattleMod. There are probably multiple ways to handle this but the simplest solution I found was to change line 488 in battlemod.lua from
+```
+	windower.add_to_chat(color,outstr)
+```
+
+to
+
+```
+	if am.message_id < 170 or am.message_id > 178 then
+		windower.add_to_chat(color,outstr)
+	end
+```
+
+/check messages all have a message ID between 170 and 178. So this essentially says "if the message is not a /check message then put it in the chat log". However this will affect /check messages at all times and in all zones, not just while in Limbus.
+
 - - - - -
 
 Bike Bell sound effect used for notifications by OTBTechno -- https://freesound.org/s/152595/ -- License: Attribution 3.0
