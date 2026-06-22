@@ -6,9 +6,9 @@ Example Notifications [ITG](https://i.imgur.com/kBvWFZW.png) [???](https://i.img
 1. Download limbuslooker.lua, settings.lua and each folder. limbuslooker.lua and the folders can be found in the zip file under [Releases](https://github.com/darkewaffle/LimbusLooker/releases). You only need to download the settings file if you do not already have one - although it could change over time if new settings are supported.
 2. Place them in Windower\addons\limbuslooker.
 3. Modify settings.lua to your liking.
-3b. If you are so inclined you can overwrite the "notification.wav" file in the media folder so that your own custom sound file plays when a ??? or ITG enemy is detected.
-4. "lua l limbuslooker" in game to initialize the addon.
-5. Run around Limbus and it'll let you know when you are near to a ??? or "Impossible to Gauge" enemy that could spawn a ???.
+4. If you are so inclined you can overwrite the "notification.wav" file in the media folder so that your own custom sound file plays when a ??? or ITG enemy is detected.
+5. "lua l limbuslooker" in game to initialize the addon.
+6. Run around Limbus and it'll let you know when you are near to a ??? or "Impossible to Gauge" enemy that could spawn a ???.
 
 ## Description
 LimbusLooker is an addon that will monitor incoming packets in Limbus to alert the player when a ??? is nearby. It will also send packets to /check every regular Apollyon or Temenos enemy to search for the "Impossible to Gauge" roaming NM. When the ??? or ITG enemy is found it will play a notification sound and create a text display on screen informing you of the distance, direction and enemy type. Additionally when an ITG enemy is detected the name of that enemy will be changed to "!! ITG !!" so that it stands out from other enemies that would otherwise have the same name or model.
