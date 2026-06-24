@@ -5,6 +5,9 @@ local CheckComplete = {}
 local CheckBatchSize = 5
 local ShowChecks = false
 
+local BatchCounter = 0
+local CheckCounter = 0
+
 function QueueForCheck(NPCID, NPCIndex)
 	if not CheckSent[NPCID] and not CheckComplete[NPCID] then
 		table.insert(CheckQueue, {["ID"] = NPCID, ["Index"] = NPCIndex})
@@ -16,9 +19,8 @@ function RunCheckBatch()
 	local NextBatchSize = 0
 	local Iterator = 0
 
-	if ShowChecks then
-		windower.add_to_chat(1, "- - Batch Starting - -")
-	end
+	BatchCounter = BatchCounter + 1
+	CheckMessage(string.format("- - Batch %d - -", BatchCounter))
 
 	-- Search CheckQueue for IDs that have not been checked. Place them in NextBatch.
 	-- End when NextBatch has CheckBatchSize number of entries or the Iterator has exhausted all entries in CheckQueue.
@@ -39,6 +41,9 @@ function RunCheckBatch()
 	-- Perform the /check operation on each entry in NextBatch.
 	for ID, Index in pairs(NextBatch) do
 		CheckTarget(ID, Index)
+
+		CheckCounter = CheckCounter + 1
+		CheckMessage(string.format("#%d = Index %d", CheckCounter, Index))
 	end
 
 	-- If the Iterator reached the size of CheckQueue then the entire queue has been processed.
@@ -62,15 +67,10 @@ function RunCheckBatch()
 end
 
 function CheckTarget(TargetID, TargetIndex)
-
 	local CheckPacket = WINDOWER_PACKETS.new('outgoing', 0x0DD)
 	CheckPacket["Target"] = TargetID
 	CheckPacket["Target Index"] = TargetIndex
 	WINDOWER_PACKETS.inject(CheckPacket)
-
-	if ShowChecks then
-		windower.add_to_chat(1, "/check sent for Index=" .. TargetIndex)
-	end
 
 	CheckSent[TargetID] = {["Index"] = TargetIndex, ["TimeSent"] = os.clock()}
 end
@@ -109,12 +109,21 @@ function ResetTrackedData()
 	CheckSent = {}
 	CheckComplete = {}
 
+	BatchCounter = 0
+	CheckCounter = 0
+
 	ResetLocatedITG()
 	ResetLocatedQuestionMark()
 end
 
 function ToggleShowChecks()
 	ShowChecks = not ShowChecks
+end
+
+function CheckMessage(Message)
+	if ShowChecks then
+		windower.add_to_chat(1, Message)
+	end
 end
 
 function GetCheckQueueHasData()
