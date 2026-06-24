@@ -1,5 +1,5 @@
 _addon.name = "LimbusLooker"
-_addon.version = "0.9.1"
+_addon.version = "0.9.2"
 _addon.author = "darkwaffle"
 _addon.command = "LL"
 
@@ -126,9 +126,7 @@ function OnCommand(...)
 	end
 
 	if CommandParameters[1] == "start" then
-		if GetInLimbus() then
-			StartLimbusOperations()
-		end
+		StartLimbusOperations()
 	end
 
 	if CommandParameters[1] == "stop" then

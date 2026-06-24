@@ -15,14 +15,14 @@ LimbusLooker is an addon that will monitor incoming packets in Limbus to alert t
 
 LimbusLooker does inject packets. It is necessary to perform the /check commands. However it tries to do so responsibly by creating a queue of enemy IDs to check from incoming packets and then processing it in small batches on a delay. By default it will attempt to check 5 enemies every 2 seconds. It will only check normal Apollyon and Temenos mobs and it will only do so once for each ID unless that enemy dies, goes out of range or the ITG enemy is killed (which causes all /check results to be reset). Check results are also reset when you change floors.
 
-Lastly all packet operations are only active in Limbus zones unless you input the 'll start' command outside of Limbus. You should have no reason to do this, LimbusLooker will start and stop those processes automatically when you enter or exit Limbus as long as the addon is loaded.
+Lastly all packet operations are only active in Limbus zones. LimbusLooker will start and stop those processes automatically when you enter or exit Limbus (or if the addon is loaded when in Limbus).
 
 ## Commands
 | Command | Usage |
 | --- | --- |
-| ll start | Manually starts the scanning process. This is only necessary if you have manually stopped the scan or if you have reloaded LimbusLooker while inside of Limbus. |
+| ll start | Manually starts the scanning process. This is only necessary if you have manually stopped the scan. |
 | ll stop | Manually stops the scanning process. |
-| ll show | Toggles the display of chat messages to indicate when a /check batch is started and when the commands are sent. |
+| ll show | Toggles the display of chat messages to indicate when a /check batch is started and when the individual commands are sent. |
 
 
 ## Note for Battlemod Users
