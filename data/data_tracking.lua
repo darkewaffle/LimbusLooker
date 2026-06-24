@@ -2,43 +2,21 @@ local CheckQueue = {}
 local CheckSent = {}
 local CheckComplete = {}
 
-local CheckInProgress = false
-local ScheduledCheckCoroutine = 0
-local LastCheckTimestamp = 0
-local FloorChangeCheckStartDelay = 10
-local CheckBatchDelay = 2
 local CheckBatchSize = 5
-local CheckSentStaleSeconds = 5
-
-local LocatedITG = 0
-local LocatedITGOriginalName = ""
-local LocatedQuestionMark = {["ID"] = 0, ["Hidden"] = false}
-
-local ShowScans = false
+local ShowChecks = false
 
 function QueueForCheck(NPCID, NPCIndex)
 	if not CheckSent[NPCID] and not CheckComplete[NPCID] then
 		table.insert(CheckQueue, {["ID"] = NPCID, ["Index"] = NPCIndex})
 	end
-	InitiateCheck()
 end
 
-function InitiateCheck()
-	local CurrentTimestamp = os.clock()
-	local SecondsSinceLastCheck = CurrentTimestamp - LastCheckTimestamp
-
-	if not CheckInProgress and #CheckQueue > 0 and SecondsSinceLastCheck > CheckBatchDelay then
-		CheckInProgress = true
-		RunCheck()
-	end
-end
-
-function RunCheck()
+function RunCheckBatch()
 	local NextBatch = {}
 	local NextBatchSize = 0
 	local Iterator = 0
 
-	if ShowScans then
+	if ShowChecks then
 		windower.add_to_chat(1, "- - Batch Starting - -")
 	end
 
@@ -66,7 +44,7 @@ function RunCheck()
 	-- If the Iterator reached the size of CheckQueue then the entire queue has been processed.
 	-- End the current check process.
 	if Iterator == #CheckQueue then
-		EndCheck()
+		EndCheckBatch()
 
 	-- If the Iterator did not reach the size CheckQueue then the queue still has data to process.
 	else
@@ -80,18 +58,7 @@ function RunCheck()
 		for i = #CheckQueue - Iterator + 1, #CheckQueue do
 			CheckQueue[i] = nil
 		end
-
-		-- Schedule the scan to run again since the queu still has data to process.
-		ScheduledCheckCoroutine = coroutine.schedule(RunCheck, CheckBatchDelay)
 	end
-
-end
-
-function EndCheck()
-	ScheduledCheckCoroutine = 0
-	CheckQueue = {}
-	CheckInProgress = false
-	LastCheckTimestamp = os.clock()
 end
 
 function CheckTarget(TargetID, TargetIndex)
@@ -101,11 +68,15 @@ function CheckTarget(TargetID, TargetIndex)
 	CheckPacket["Target Index"] = TargetIndex
 	WINDOWER_PACKETS.inject(CheckPacket)
 
-	if ShowScans then
+	if ShowChecks then
 		windower.add_to_chat(1, "/check sent for Index=" .. TargetIndex)
 	end
 
 	CheckSent[TargetID] = {["Index"] = TargetIndex, ["TimeSent"] = os.clock()}
+end
+
+function EndCheckBatch()
+	CheckQueue = {}
 end
 
 function CheckResultReceived(TargetID)
@@ -113,20 +84,9 @@ function CheckResultReceived(TargetID)
 	CheckComplete[TargetID] = true
 end
 
-function ValidateSentChecks()
-	local CurrentTime = os.clock()
-
-	for NPCID, NPCData in pairs(CheckSent) do
-		if CurrentTime - NPCData["TimeSent"] > CheckSentStaleSeconds then
-			QueueForCheck(NPCID, NPCData["Index"])
-			CheckSent[NPCID] = nil
-		end
-	end
-end
-
 function ResetIDCheckState(ResetID)
 	-- If the ID of dead enemy matched the located ITG Limbus foe then reset data so that enemies will be re-checked
-	if ResetID == LocatedITG then
+	if ResetID == GetLocatedITG() then
 		ResetTrackedData()
 		return
 	elseif ResetID == GetLocatedQuestionMarkID() then
@@ -148,70 +108,32 @@ function ResetTrackedData()
 	CheckQueue = {}
 	CheckSent = {}
 	CheckComplete = {}
-	CheckInProgress = false
-	LocatedITG = 0
-	LocatedITGOriginalName = ""
+
+	ResetLocatedITG()
 	ResetLocatedQuestionMark()
+end
 
-	if type(ScheduledCheckCoroutine) == "thread" then
-		coroutine.close(ScheduledCheckCoroutine)
-		ScheduledCheckCoroutine = 0
+function ToggleShowChecks()
+	ShowChecks = not ShowChecks
+end
+
+function GetCheckQueueHasData()
+	return #CheckQueue > 0
+end
+
+--[[
+
+local CheckSentStaleSeconds = 5
+
+function ValidateSentChecks()
+	local CurrentTime = os.clock()
+
+	for NPCID, NPCData in pairs(CheckSent) do
+		if CurrentTime - NPCData["TimeSent"] > CheckSentStaleSeconds then
+			QueueForCheck(NPCID, NPCData["Index"])
+			CheckSent[NPCID] = nil
+		end
 	end
 end
 
-function SetLocatedITG(TargetID)
-	LocatedITG = TargetID
-	LocatedITGOriginalName = windower.ffxi.get_mob_by_id(TargetID).name
-	SetDisplayITG()
-	PlayNotification()
-end
-
-function GetLocatedITG()
-	if LocatedITG == 0 then
-		return nil
-	else
-		return LocatedITG
-	end
-end
-
-function GetLocatedITGOriginalName()
-	return LocatedITGOriginalName
-end
-
-function SetLocatedQuestionMark(TargetID, Hidden)
-	LocatedQuestionMark = {["ID"]=TargetID, ["Hidden"] = Hidden}
-	SetDisplayQuestionMark()
-	PlayNotification()
-end
-
-function GetLocatedQuestionMarkID()
-	if LocatedQuestionMark["ID"] == 0 then
-		return nil
-	else
-		return LocatedQuestionMark["ID"]
-	end
-end
-
-function GetLocatedQuestionMarkHidden()
-	if LocatedQuestionMark["Hidden"] == true then
-		return true
-	else
-		return false
-	end
-end
-
-function ResetLocatedQuestionMark()
-	LocatedQuestionMark = {["ID"] = 0, ["Hidden"] = false}
-end
-
-function DelayCheckStart(DelayAmount)
-	LastCheckTimestamp = os.clock() + DelayAmount
-end
-
-function DelayCheckStartForFloorChange()
-	DelayCheckStart(FloorChangeCheckStartDelay)
-end
-
-function ToggleShowScans()
-	ShowScans = not ShowScans
-end
+]]

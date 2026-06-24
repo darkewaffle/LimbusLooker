@@ -7,7 +7,7 @@ function ParseDialogChoice(id, original, modified, injected, blocked)
 
 	if DialogMob then
 		if (DialogMob.name == "Matter Diffusion Module" or DialogMob.name == "Swirling Vortex") and DialogOption == 100 then
-			DelayCheckStartForFloorChange()
+			PauseChecksOnFloorChange()
 		end
 	end
 end

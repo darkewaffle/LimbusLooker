@@ -6,7 +6,6 @@ _addon.command = "LL"
 WINDOWER_PACKETS = require "packets"
 WINDOWER_RESOURCES = require "resources"
 WINDOWER_TEXTS = require "texts"
-require "bit"
 require "pack"
 
 require "libraries/get_character"
@@ -18,37 +17,44 @@ require "chunks/chunk_ActionMessage"
 require "chunks/chunk_DialogChoice"
 require "chunks/chunk_NPCSpawn"
 require "chunks/chunk_NPCUpdate"
+require "data/check_loop"
 require "data/data_tracking"
+require "data/track_itg"
+require "data/track_questionmark"
 require "ui/display"
 
 PLAYER_SETTINGS = require "settings"
 
 local InLimbus = false
 local RegisteredEventIDs = {}
-
 local RenderInterval = .25
 local LastRenderUpdate = 0
+local OperationsRunning = false
 
--- ChunkInEventID is a global managed in OnZone to track if OnChunkIn event is currently registered or not
--- ChunkOutEventID is a global managed in OnZone to track if OnChunkIn event is currently registered or not
--- PrerenderEventID is a global managed in OnZone to track if OnRender event is currently registered or not
+-- ChunkInEventID is a global id for a registered event managed Start/StopLimbusOperations > HandleTransientEvents
+-- ChunkOutEventID is a global id for a registered event managed Start/StopLimbusOperations > HandleTransientEvents
+-- PrerenderEventID is a global id for a registered event managed Start/StopLimbusOperations > HandleTransientEvents
 
 function OnLoad()
 	table.insert(RegisteredEventIDs, windower.register_event('zone change', OnZone))
 	table.insert(RegisteredEventIDs, windower.register_event('unload', OnUnload))
 	table.insert(RegisteredEventIDs, windower.register_event('addon command', OnCommand))
+
+	SetInLimbus()
 	CreateDisplay(false)
+
+	if GetInLimbus() then
+		StartLimbusOperations()
+	end
 end
 
 function OnZone(new_id, old_id)
-	if WINDOWER_RESOURCES.zones[new_id].en == "Apollyon" or WINDOWER_RESOURCES.zones[new_id].en == "Temenos" then
-		InLimbus = true
-	else
-		InLimbus = false
-	end
+	SetInLimbus()
 
-	if InLimbus then
-		HandleTransientEvents("start")
+	if GetInLimbus() then
+		StartLimbusOperations()
+	else
+		StopLimbusOperations()
 	end
 end
 
@@ -74,8 +80,7 @@ function OnChunkIn(id, original, modified, injected, blocked)
 	-- Zone change beginning
 	elseif id == 0x00B then
 		HideDisplay()
-		ResetTrackedData()
-		HandleTransientEvents("stop")
+		StopLimbusOperations()
 	end
 end
 
@@ -106,28 +111,28 @@ function OnRender()
 end
 
 function OnUnload()
+	StopLimbusOperations()
+
 	for _, ID in ipairs(RegisteredEventIDs) do
 		windower.unregister_event(ID)
 	end
-
-	HandleTransientEvents("stop")
 end
 
 function OnCommand(...)
 	local CommandParameters = {...}
 
 	if CommandParameters[1] == "show" then
-		ToggleShowScans()
+		ToggleShowChecks()
 	end
 
 	if CommandParameters[1] == "start" then
-		InLimbus = true
-		HandleTransientEvents("start")
+		if GetInLimbus() then
+			StartLimbusOperations()
+		end
 	end
 
 	if CommandParameters[1] == "stop" then
-		InLimbus = false
-		HandleTransientEvents("stop")
+		StopLimbusOperations()
 	end
 end
 
@@ -163,6 +168,39 @@ function HandleTransientEvents(Action)
 	else
 		print("Invalid action argument provided to HandleTransientEvents.")
 	end
+end
+
+function SetInLimbus()
+	local CurrentZoneID = windower.ffxi.get_info().zone
+
+	if CurrentZoneID > 0 then
+		if WINDOWER_RESOURCES.zones[CurrentZoneID].en == "Apollyon" or WINDOWER_RESOURCES.zones[CurrentZoneID].en == "Temenos" then
+			InLimbus = true
+		else
+			InLimbus = false
+		end
+	else
+		InLimbus = false
+	end
+end
+
+function GetInLimbus()
+	return InLimbus
+end
+
+function StartLimbusOperations()
+	if GetInLimbus() and not OperationsRunning then
+		OperationsRunning = true
+		HandleTransientEvents("start")
+		StartCheckLoop()
+	end
+end
+
+function StopLimbusOperations()
+	OperationsRunning = false
+	HandleTransientEvents("stop")
+	StopCheckLoop()
+	ResetTrackedData()
 end
 
 OnLoad()
