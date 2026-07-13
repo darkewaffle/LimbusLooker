@@ -15,7 +15,12 @@ function GetDisplaySettings()
 	DisplaySettings.bg.red     = PLAYER_SETTINGS.bg.red     or 0
 	DisplaySettings.bg.green   = PLAYER_SETTINGS.bg.green   or 0
 	DisplaySettings.bg.blue    = PLAYER_SETTINGS.bg.blue    or 0
-	DisplaySettings.bg.visible = PLAYER_SETTINGS.bg.visible or true
+
+	if PLAYER_SETTINGS.bg.visible == false then
+		DisplaySettings.bg.visible = false
+	else
+		DisplaySettings.bg.visible = true
+	end
 
 	DisplaySettings.flags.right     = PLAYER_SETTINGS.flags.right     or false
 	DisplaySettings.flags.bottom    = PLAYER_SETTINGS.flags.bottom    or false
