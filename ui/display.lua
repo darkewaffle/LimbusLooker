@@ -75,13 +75,28 @@ function SetDisplayForMob(TargetID, DisplayLabel)
 	local Mob = windower.ffxi.get_mob_by_id(TargetID)
 
 	if Mob then
-		local MobDistance = string.format("%.1f", math.sqrt(Mob.distance))
-		local CardinalDirection = GetCharacterCardinalToMob(Mob)
+		local MobDistance = math.sqrt(Mob.distance)
+		local CardinalDirection = "~" .. GetCharacterCardinalToMob(Mob)
+		local DisplayBuffer = " "
+		
+		local Line1 = DisplayBuffer .. DisplayLabel .. DisplayBuffer
+		local Line2 = DisplayBuffer .. string.format("%2s %.1f", CardinalDirection, MobDistance) .. DisplayBuffer
+		
+		local Line1Width = #Line1
+		local Line2Width = #Line2
+		local WidthDifference = math.abs(Line1Width - Line2Width)
 
-		local DisplayText = DisplayLabel .. "\n"
-		DisplayText = DisplayText .. "~" .. CardinalDirection .. " ~" .. MobDistance
+		if math.abs(Line1Width - Line2Width) > 1 then
+			local Padding = string.rep(DisplayBuffer, math.floor(WidthDifference / 2))
+			
+			if Line1Width > Line2Width then
+				Line2 = Padding .. Line2 .. Padding
+			else
+				Line1 = Padding .. Line1 .. Padding
+			end
+		end
 
-		LLDisplay:text(DisplayText)
+		LLDisplay:text(Line1 .. "\n" .. Line2)
 		ShowDisplay()
 	end
 end
