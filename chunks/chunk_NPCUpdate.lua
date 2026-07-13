@@ -36,7 +36,7 @@ function ParseNPCUpdate(id, original, modified, injected, blocked)
 		ResetIDCheckState(NPCID)
 
 	-- 2326 = Apollyon ???, 2423 = Temenos ???
-	elseif (NPCModel == 2326 or NPCModel == 2423 or NPCName == "???") then
+	elseif (NPCModel == 2326 or NPCModel == 2423) then
 		if not GetLocatedQuestionMarkID() and NPCMask == 15 then
 			SetLocatedQuestionMark(NPCID, NPCHidden)
 		end
