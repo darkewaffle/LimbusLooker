@@ -8,8 +8,9 @@ function GetDisplaySettings()
 	DisplaySettings.text.fonts = {}
 	DisplaySettings.text.stroke = {}
 
-	DisplaySettings.pos.x = PLAYER_SETTINGS.pos.x or 500
-	DisplaySettings.pos.y = PLAYER_SETTINGS.pos.y or 500
+	DisplaySettings.pos.x = PLAYER_SETTINGS.pos.x or math.floor(windower.get_windower_settings().x_res * .44)
+	DisplaySettings.pos.y = PLAYER_SETTINGS.pos.y or math.floor(windower.get_windower_settings().y_res * .1)
+
 
 	DisplaySettings.bg.alpha   = PLAYER_SETTINGS.bg.alpha   or 128
 	DisplaySettings.bg.red     = PLAYER_SETTINGS.bg.red     or 0
