@@ -1,8 +1,6 @@
 function ParseActionMessage(id, original, modified, injected, blocked)
-	local ActionMessagePacket = WINDOWER_PACKETS.parse('incoming', original)
-	local MessageID = ActionMessagePacket["Message"]
-	local MessageTargetID = ActionMessagePacket["Target"]
-	local MessageTargetIndex = ActionMessagePacket["Target Index"]
+	local MessageTargetID = original:unpack("b32", 9)
+	local MessageID = original:unpack("b16", 25)
 
 	-- 249 is "${target}'s strength is impossible to gauge!"
 	if MessageID == 249 then
