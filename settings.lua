@@ -8,7 +8,7 @@ PlayerSettings.text.fonts = {}
 PlayerSettings.text.stroke = {}
 
 
--- You can uncomment any of these to adjust the settings of the notification display when a ??? or ITG is found.
+-- You can uncomment any of these to adjust the appearance of the notification display when a ??? or ITG is found.
 
 -- PlayerSettings.pos.x = 500
 -- PlayerSettings.pos.y = 500
