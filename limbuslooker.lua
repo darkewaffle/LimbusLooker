@@ -1,5 +1,5 @@
 _addon.name = "LimbusLooker"
-_addon.version = "0.9.2"
+_addon.version = "1.0.0"
 _addon.author = "darkwaffle"
 _addon.command = "LL"
 
