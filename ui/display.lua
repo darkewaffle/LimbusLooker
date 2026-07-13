@@ -16,30 +16,30 @@ function GetDisplaySettings()
 	DisplaySettings.bg.red     = PLAYER_SETTINGS.bg.red     or 0
 	DisplaySettings.bg.green   = PLAYER_SETTINGS.bg.green   or 0
 	DisplaySettings.bg.blue    = PLAYER_SETTINGS.bg.blue    or 0
+	DisplaySettings.bg.visible = PLAYER_SETTINGS.bg.visible or false
 
-	if PLAYER_SETTINGS.bg.visible == false then
-		DisplaySettings.bg.visible = false
+	if PLAYER_SETTINGS.flags.bold == false then
+		DisplaySettings.flags.bold = false
 	else
-		DisplaySettings.bg.visible = true
+		DisplaySettings.flags.bold = true
 	end
 
 	DisplaySettings.flags.right     = PLAYER_SETTINGS.flags.right     or false
 	DisplaySettings.flags.bottom    = PLAYER_SETTINGS.flags.bottom    or false
-	DisplaySettings.flags.bold      = PLAYER_SETTINGS.flags.bold      or false
 	DisplaySettings.flags.draggable = PLAYER_SETTINGS.flags.draggable or false
 	DisplaySettings.flags.italic    = PLAYER_SETTINGS.flags.italic    or false
 
-	DisplaySettings.padding = PLAYER_SETTINGS.padding or 3
+	DisplaySettings.padding = PLAYER_SETTINGS.padding or 0
 
-	DisplaySettings.text.size  = PLAYER_SETTINGS.text.size  or 14
+	DisplaySettings.text.size  = PLAYER_SETTINGS.text.size  or 24
 	DisplaySettings.text.font  = PLAYER_SETTINGS.text.font  or 'Consolas'
-	DisplaySettings.text.alpha = PLAYER_SETTINGS.text.alpha or 255
+	DisplaySettings.text.alpha = PLAYER_SETTINGS.text.alpha or 204
 	DisplaySettings.text.red   = PLAYER_SETTINGS.text.red   or 255
 	DisplaySettings.text.green = PLAYER_SETTINGS.text.green or 255
 	DisplaySettings.text.blue  = PLAYER_SETTINGS.text.blue  or 255
 
-	DisplaySettings.text.stroke.width = PLAYER_SETTINGS.text.stroke.width or 1
-	DisplaySettings.text.stroke.alpha = PLAYER_SETTINGS.text.stroke.alpha or 255
+	DisplaySettings.text.stroke.width = PLAYER_SETTINGS.text.stroke.width or 3
+	DisplaySettings.text.stroke.alpha = PLAYER_SETTINGS.text.stroke.alpha or 128
 	DisplaySettings.text.stroke.red   = PLAYER_SETTINGS.text.stroke.red   or 0
 	DisplaySettings.text.stroke.green = PLAYER_SETTINGS.text.stroke.green or 0
 	DisplaySettings.text.stroke.blue  = PLAYER_SETTINGS.text.stroke.blue  or 0
