@@ -1,11 +1,11 @@
 # LimbusLooker
 
-Example Notifications [ITG](https://i.imgur.com/kBvWFZW.png) [???](https://i.imgur.com/MJJ9DhQ.png)
+Example Notification [ITG](https://i.imgur.com/xu9mJWV.png)
 
 ## How To
 1. Download limbuslooker.lua, settings.lua and each folder. limbuslooker.lua and the folders can be found in the zip file under [Releases](https://github.com/darkewaffle/LimbusLooker/releases). You only need to download the settings file if you do not already have one - although it could change over time if new settings are supported.
 2. Place them in Windower\addons\limbuslooker.
-3. Modify settings.lua to your liking.
+3. Modify settings.lua to your liking. The default display will be large, white text in the top center of the screen.
 4. If you are so inclined you can overwrite the "notification.wav" file in the media folder so that your own custom sound file plays when a ??? or ITG enemy is detected.
 5. "lua l limbuslooker" in game to initialize the addon.
 6. Run around Limbus and it'll let you know when you are near to a ??? or "Impossible to Gauge" enemy that could spawn a ???.
