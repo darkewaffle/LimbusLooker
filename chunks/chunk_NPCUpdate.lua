@@ -20,6 +20,7 @@ function ParseNPCUpdate(id, original, modified, injected, blocked)
 	local NPCIsAlive = NPCStatus <= 1
 	local NPCIsDead = NPCStatus >= 2
 
+	local NPCMask = NPCUpdatePacket["Mask"]
 	local NPCMaskBools = { original:unpack("q8", 11) }
 	local NPCStatusChanged = NPCMaskBools[3]
 	local NPCTerminated = NPCMaskBools[6]
@@ -36,7 +37,7 @@ function ParseNPCUpdate(id, original, modified, injected, blocked)
 
 	-- 2326 = Apollyon ???, 2423 = Temenos ???
 	elseif (NPCModel == 2326 or NPCModel == 2423 or NPCName == "???") then
-		if not GetLocatedQuestionMarkID() then
+		if not GetLocatedQuestionMarkID() and NPCMask == 15 then
 			SetLocatedQuestionMark(NPCID, NPCHidden)
 		end
 	
